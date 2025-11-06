@@ -31,7 +31,7 @@ The `public/sw.js` service worker caches navigations and static assets so the ap
 
 ```
 src/
-  components/      // Shared UI (BrandHeader, CircleButton, PuzzleGrid, etc.)
+  components/      // Shared UI (BrandHeader, PuzzleBackdrop, PuzzleGrid, etc.)
   routes/          // Intro, Hub, AppDetail, Interstitial, Puzzle, Congrats
   data/            // Exhibition show metadata (src/data/shows.ts)
   lib/             // Puzzle utilities & accessibility helpers
@@ -43,13 +43,13 @@ public/assets/     // Puzzle artwork + show thumbnails (replace with real images
 
 Replace the placeholder images in `public/assets/` with production artwork:
 
-- `puzzle-full.jpg` — master puzzle image (used in hub, puzzle, congrats)
-- `show-1.jpg` … `show-4.jpg` — circular thumbnails for each showcase
+- `puzzle-full.jpg` — placeholder still for global backgrounds
+- `show-1.jpg` … `show-4.jpg` — pin thumbnails rendered on the hub puzzle
 - Update `src/data/shows.ts` to match your final copy and team details.
 
 ### Puzzle Grid Size
 
-The interactive puzzle uses five coloured tiles labelled 1–5. To change the amount, update the `tileCount` (and optionally `columns`) passed to `PuzzleGrid` in `src/routes/Puzzle.tsx`:
+The interactive puzzle uses five numbered tiles labelled 1–5 with the same styling as the backdrop pieces. To change the amount, update the `tileCount` (and optionally `columns`) passed to `PuzzleGrid` in `src/routes/Puzzle.tsx`:
 
 ```tsx
 <PuzzleGrid tileCount={6} columns={3} onSolved={handleSolved} />

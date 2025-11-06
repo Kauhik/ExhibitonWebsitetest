@@ -16,8 +16,6 @@ type PuzzleGridProps = {
   onSolved: () => void;
 };
 
-const COLORS = ['#fef08a', '#bfdbfe', '#fbcfe8', '#bbf7d0', '#fed7aa'];
-
 const PuzzleGrid = ({
   tileCount = 5,
   columns = 3,
@@ -126,7 +124,6 @@ const PuzzleGrid = ({
           const isActive = selectedIndex === index;
           const isCorrect = tileId === index;
           const { row, column } = getTileCoordinates(index, columns);
-          const backgroundColor = COLORS[tileId % COLORS.length];
           const positionLabel = `Tile ${tileId + 1}, row ${row + 1}, column ${column + 1}`;
 
           return (
@@ -142,10 +139,9 @@ const PuzzleGrid = ({
               onDrop={(event) => handleDrop(event, index)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               onClick={() => handleTileClick(index)}
-              className={`relative flex aspect-square items-center justify-center rounded-2xl border border-slate-200 text-2xl font-semibold text-slate-900 shadow-sm transition-all duration-150 ease-out ${
+              className={`relative flex aspect-square items-center justify-center rounded-2xl border border-slate-200 bg-white text-2xl font-semibold text-slate-900 shadow-sm transition-all duration-150 ease-out ${
                 isActive ? 'ring-4 ring-brand-subtle' : ''
               } ${isCorrect ? 'border-green-500 shadow-[0_0_0_2px_rgba(34,197,94,0.25)]' : ''} focus-visible-ring`}
-              style={{ backgroundColor }}
               data-correct={isCorrect}
             >
               <span>{tileId + 1}</span>
