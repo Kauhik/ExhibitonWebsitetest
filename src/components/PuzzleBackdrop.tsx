@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import type { Show } from '@/data/shows';
+import type { Show } from '@/types/show';
 
 type PuzzleBackdropProps = {
   pieceIds: number[];
@@ -25,7 +25,7 @@ const PIECES_LAYOUT: Record<
 };
 
 const basePieceClasses =
-  'absolute flex h-[82px] w-[104px] items-center justify-center rounded-[26px] border border-slate-300 bg-white text-xl font-semibold text-slate-500 shadow-sm';
+  'absolute flex h-[82px] w-[104px] items-center justify-center rounded-[26px] border border-slate-300 bg-slate-50 text-2xl font-bold text-slate-800 shadow';
 
 const PuzzleBackdrop = ({
   pieceIds,
@@ -34,6 +34,12 @@ const PuzzleBackdrop = ({
   className = '',
 }: PuzzleBackdropProps) => {
   const navigate = useNavigate();
+
+  const buildIconSrc = (icon?: string | null) => {
+    if (!icon) return null;
+    const separator = icon.includes('?') ? '&' : '?';
+    return `${icon}${separator}width=1024&height=1024&fit=cover`;
+  };
 
   return (
     <div className={`relative mx-auto flex justify-center ${className}`}>
@@ -77,11 +83,17 @@ const PuzzleBackdrop = ({
               }}
               aria-label={`Open ${show.name}`}
             >
-              <img
-                src={show.thumbnail}
-                alt=""
-                className="h-8 w-8 rounded-full object-cover"
-              />
+              {buildIconSrc(show.icon) ? (
+                <img
+                  src={buildIconSrc(show.icon) ?? undefined}
+                  alt=""
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-semibold text-slate-500">
+                  {show.name.charAt(0)}
+                </span>
+              )}
             </button>
           );
         })}

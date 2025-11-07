@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
-import { shows } from '@/data/shows';
+import { useShows } from '@/hooks/useShows';
 
 const REGISTRATION_FLAG = 'attendee_registered';
 
 const Hub = () => {
   const navigate = useNavigate();
+  const { shows, isLoading, error, reload } = useShows();
   const [isAllowed, setIsAllowed] = useState(false);
 
   useEffect(() => {
@@ -39,12 +40,31 @@ const Hub = () => {
         Tap a pin to open each project showcase.
       </p>
 
-      <PuzzleBackdrop
-        pieceIds={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-        shows={shows}
-        scale={0.9}
-        className="mt-12"
-      />
+      {isLoading && (
+        <p className="mt-12 text-center text-sm text-slate-500">Loading showcases…</p>
+      )}
+
+      {error && (
+        <div className="mt-12 space-y-4 text-center">
+          <p className="text-sm text-rose-600">Unable to load showcases: {error}</p>
+          <button
+            type="button"
+            onClick={reload}
+            className="mx-auto inline-flex h-11 items-center justify-center rounded-full border border-slate-200 px-6 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400 focus-visible-ring"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <PuzzleBackdrop
+          pieceIds={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+          shows={shows}
+          scale={0.9}
+          className="mt-12"
+        />
+      )}
     </div>
   );
 };

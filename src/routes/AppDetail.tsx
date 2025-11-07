@@ -1,18 +1,50 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import TeamCard from '@/components/TeamCard';
-import { findShowById } from '@/data/shows';
+import { useShow } from '@/hooks/useShows';
 
 const AppDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const show = id ? findShowById(id) : undefined;
+  const { show, isLoading, error, reload } = useShow(id ?? null);
 
   useEffect(() => {
-    if (!show) {
+    if (!isLoading && !show) {
       navigate('/hub', { replace: true });
     }
-  }, [navigate, show]);
+  }, [navigate, show, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f4f5f8] text-sm text-slate-500">
+        Loading app details…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#f4f5f8] px-6 text-center text-slate-700">
+        <p className="text-sm text-rose-600">Unable to load this app: {error}</p>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={reload}
+            className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-700 focus-visible-ring"
+          >
+            Try again
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/hub', { replace: true })}
+            className="rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white focus-visible-ring"
+          >
+            Back to hub
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!show) {
     return null;
@@ -28,6 +60,14 @@ const AppDetail = () => {
       </header>
 
       <div className="mt-10 space-y-6">
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <img
+            src={show.thumbnail}
+            alt={`${show.name} thumbnail`}
+            className="h-48 w-full rounded-2xl object-cover"
+          />
+        </section>
+
         <section className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-400">
             App Information
@@ -41,7 +81,12 @@ const AppDetail = () => {
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {show.team.map((member) => (
-              <TeamCard key={member.name} name={member.name} role={member.role} />
+              <TeamCard
+                key={`${member.name}-${member.role}`}
+                name={member.name}
+                role={member.role}
+                avatar={member.avatar ?? undefined}
+              />
             ))}
           </div>
         </section>
