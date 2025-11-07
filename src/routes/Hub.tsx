@@ -63,6 +63,9 @@ const Hub = () => {
           shows={shows}
           scale={0.9}
           className="mt-12"
+          showPieceIcons
+          showPins={false}
+          onPieceSelect={(show) => navigate(`/show/${show.id}`)}
         />
       )}
     </div>

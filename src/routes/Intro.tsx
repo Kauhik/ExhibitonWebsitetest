@@ -2,6 +2,7 @@ import { type FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
+import { useShows } from '@/hooks/useShows';
 import { supabase } from '@/lib/supabaseClient';
 
 const REGISTRATION_FLAG = 'attendee_registered';
@@ -12,6 +13,7 @@ const Intro = () => {
   const [occupation, setOccupation] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { shows } = useShows();
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,7 +53,14 @@ const Intro = () => {
     <div className="relative flex min-h-screen flex-col items-center bg-white px-6 pb-16 pt-20 text-slate-900">
       <BrandHeader />
 
-      <PuzzleBackdrop pieceIds={[1, 2, 3, 4, 5]} scale={0.85} className="mt-12" />
+      <PuzzleBackdrop
+        pieceIds={[1, 2, 3, 4, 5]}
+        shows={shows}
+        scale={0.85}
+        className="mt-12"
+        showPieceIcons
+        showPins={false}
+      />
 
       <form
         onSubmit={handleSubmit}
