@@ -4,6 +4,8 @@ import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
 import { supabase } from '@/lib/supabaseClient';
 
+const REGISTRATION_FLAG = 'attendee_registered';
+
 const Intro = () => {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -32,7 +34,11 @@ const Intro = () => {
         throw insertError;
       }
 
-      navigate('/hub');
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(REGISTRATION_FLAG, 'true');
+      }
+
+      navigate('/hub', { replace: true });
     } catch (submitError) {
       console.error(submitError);
       setError('Unable to save your details right now. Please try again.');

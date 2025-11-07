@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TeamCard from '@/components/TeamCard';
 import { findShowById } from '@/data/shows';
 
@@ -50,12 +50,13 @@ const AppDetail = () => {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 pedestal-gradient" />
 
       <div className="pointer-events-auto fixed inset-x-0 bottom-0 mx-auto max-w-sm px-6 pb-8">
-        <Link
-          to={`/show/${show.id}/ask`}
-          className="flex h-14 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white shadow-lg transition-transform active:scale-95 focus-visible-ring"
+        <button
+          type="button"
+          onClick={() => navigate(`/show/${show.id}/ask`)}
+          className="flex h-14 w-full items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white shadow-lg transition-transform active:scale-95 focus-visible-ring"
         >
           Ask my puzzle
-        </Link>
+        </button>
       </div>
     </div>
   );
