@@ -58,15 +58,56 @@ const Hub = () => {
       )}
 
       {!isLoading && !error && (
-        <PuzzleBackdrop
-          pieceIds={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-          shows={shows}
-          scale={0.9}
-          className="mt-12"
-          showPieceIcons
-          showPins={false}
-          onPieceSelect={(show) => navigate(`/show/${show.id}`)}
-        />
+        <>
+          <PuzzleBackdrop
+            pieceIds={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            shows={shows}
+            scale={0.9}
+            className="mt-12"
+            showPieceIcons
+            showPins={false}
+            onPieceSelect={(show) => navigate(`/show/${show.id}`)}
+          />
+
+          <section className="mt-10 space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-slate-400">
+              Teams
+            </h2>
+            <div className="space-y-3">
+              {shows.map((show) => (
+                <button
+                  key={show.id}
+                  type="button"
+                  onClick={() => navigate(`/show/${show.id}`)}
+                  className="flex w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition-transform active:scale-95 focus-visible-ring"
+                >
+                  <div className="h-10 w-10 overflow-hidden rounded-xl bg-slate-100">
+                    <img
+                      src={show.icon ?? show.thumbnail}
+                      alt={`${show.name} icon`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col">
+                    <p className="text-sm font-semibold text-slate-900">{show.name}</p>
+                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                      {show.platform && (
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700">
+                          {show.platform}
+                        </span>
+                      )}
+                      {show.siteUrl && (
+                        <span className="truncate text-xs text-slate-500">
+                          {show.siteUrl}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );

@@ -72,6 +72,23 @@ const AppDetail = () => {
           <h2 className="text-xs uppercase tracking-[0.3em] text-slate-400">
             App Information
           </h2>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+            {show.platform && (
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-700">
+                {show.platform}
+              </span>
+            )}
+            {show.siteUrl && (
+              <a
+                href={show.siteUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border border-slate-200 px-3 py-1 text-[11px] font-semibold text-slate-700 hover:border-slate-400"
+              >
+                Visit site
+              </a>
+            )}
+          </div>
           <p className="text-sm leading-relaxed text-slate-600">{show.description}</p>
         </section>
 
@@ -86,6 +103,7 @@ const AppDetail = () => {
                 name={member.name}
                 role={member.role}
                 avatar={member.avatar ?? undefined}
+                linkedinUrl={member.linkedinUrl ?? undefined}
               />
             ))}
           </div>

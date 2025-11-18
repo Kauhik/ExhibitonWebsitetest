@@ -2,6 +2,7 @@ export type TeamMember = {
   name: string;
   role: string;
   avatar?: string | null;
+  linkedinUrl?: string | null;
 };
 
 export type Show = {
@@ -14,4 +15,6 @@ export type Show = {
   accent: string;
   pieceId: number;
   pinOffset?: { x: number; y: number };
+  siteUrl?: string | null;
+  platform?: string | null;
 };

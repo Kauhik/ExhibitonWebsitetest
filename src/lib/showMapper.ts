@@ -5,18 +5,21 @@ export const SHOW_SELECT_FIELDS = `
   name,
   description,
   accent,
+  platform,
+  site_url,
   piece_id,
   pin_offset_x,
   pin_offset_y,
   thumbnail_url,
   icon_url,
-  team:app_team_members(name, role, avatar_url)
+  team:app_team_members(name, role, avatar_url, linkedin_url)
 `;
 
 type TeamRow = {
   name: string;
   role: string;
   avatar_url?: string | null;
+  linkedin_url?: string | null;
 };
 
 export type AppRow = {
@@ -24,6 +27,8 @@ export type AppRow = {
   name: string;
   description: string;
   accent?: string | null;
+  platform?: string | null;
+  site_url?: string | null;
   piece_id: number;
   pin_offset_x?: number | null;
   pin_offset_y?: number | null;
@@ -51,10 +56,13 @@ export const mapRowToShow = (row: AppRow): Show => ({
           y: row.pin_offset_y ?? DEFAULT_PIN_OFFSET.y,
         }
       : undefined,
+  siteUrl: row.site_url ?? null,
+  platform: row.platform ?? 'app',
   team:
     row.team?.map((member) => ({
       name: member.name,
       role: member.role,
       avatar: member.avatar_url ?? null,
+      linkedinUrl: member.linkedin_url ?? null,
     })) ?? [],
 });
