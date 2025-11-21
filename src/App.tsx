@@ -6,6 +6,7 @@ import Interstitial from '@/routes/Interstitial';
 import Puzzle from '@/routes/Puzzle';
 import Congrats from '@/routes/Congrats';
 import QrScannerPage from '@/routes/QrScanner';
+import Feedback from '@/routes/Feedback';
 import { QR_SCANNER_ROUTE } from '@/api/qrApis';
 
 const App = () => (
@@ -13,6 +14,7 @@ const App = () => (
     <Route path="/" element={<Intro />} />
     <Route path="/hub" element={<Hub />} />
     <Route path={QR_SCANNER_ROUTE} element={<QrScannerPage />} />
+    <Route path="/feedback" element={<Feedback />} />
     <Route path="/show/:id" element={<AppDetail />} />
     <Route path="/show/:id/ask" element={<Interstitial />} />
     <Route path="/puzzle" element={<Puzzle />} />

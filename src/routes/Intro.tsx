@@ -6,6 +6,7 @@ import { useShows } from '@/hooks/useShows';
 import { supabase } from '@/lib/supabaseClient';
 
 const REGISTRATION_FLAG = 'attendee_registered';
+const ATTENDEE_ID_KEY = 'attendee_id';
 
 const Intro = () => {
   const navigate = useNavigate();
@@ -27,10 +28,14 @@ const Intro = () => {
     setError(null);
 
     try {
-      const { error: insertError } = await supabase.from('attendees').insert({
-        name: name.trim(),
-        occupation: occupation.trim(),
-      });
+      const { data, error: insertError } = await supabase
+        .from('attendees')
+        .insert({
+          name: name.trim(),
+          occupation: occupation.trim(),
+        })
+        .select('id')
+        .single();
 
       if (insertError) {
         throw insertError;
@@ -38,6 +43,9 @@ const Intro = () => {
 
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(REGISTRATION_FLAG, 'true');
+         if (data?.id) {
+           window.localStorage.setItem(ATTENDEE_ID_KEY, data.id);
+         }
       }
 
       navigate('/hub', { replace: true });

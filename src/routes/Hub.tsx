@@ -41,13 +41,20 @@ const Hub = () => {
         Tap a pin to open each project showcase.
       </p>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center gap-3">
         <button
           type="button"
           onClick={() => navigate(QR_SCANNER_ROUTE)}
           className="inline-flex h-11 items-center justify-center rounded-full bg-slate-900 px-6 text-sm font-semibold text-white shadow-lg transition-transform active:scale-95 focus-visible-ring"
         >
           Scan QR code
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/feedback')}
+          className="inline-flex h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-6 text-sm font-semibold text-slate-700 shadow-sm transition-transform active:scale-95 focus-visible-ring"
+        >
+          Feedback
         </button>
       </div>
 
