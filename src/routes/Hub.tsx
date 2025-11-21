@@ -4,8 +4,7 @@ import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
 import { useShows } from '@/hooks/useShows';
 import { QR_SCANNER_ROUTE } from '@/api/qrApis';
-
-const REGISTRATION_FLAG = 'attendee_registered';
+import { hasRegisteredAttendee } from '@/api/attendeeApis';
 
 const Hub = () => {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ const Hub = () => {
       return;
     }
 
-    const hasRegistered = window.localStorage.getItem(REGISTRATION_FLAG) === 'true';
+    const hasRegistered = hasRegisteredAttendee();
 
     if (!hasRegistered) {
       navigate('/', { replace: true });

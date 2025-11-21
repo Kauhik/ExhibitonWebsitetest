@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
 import { useShows } from '@/hooks/useShows';
-import { supabase } from '@/lib/supabaseClient';
-
-const REGISTRATION_FLAG = 'attendee_registered';
-const ATTENDEE_ID_KEY = 'attendee_id';
+import {
+  registerAttendee,
+  storeAttendeeInLocalStorage,
+} from '@/api/attendeeApis';
 
 const Intro = () => {
   const navigate = useNavigate();
@@ -28,25 +28,12 @@ const Intro = () => {
     setError(null);
 
     try {
-      const { data, error: insertError } = await supabase
-        .from('attendees')
-        .insert({
-          name: name.trim(),
-          occupation: occupation.trim(),
-        })
-        .select('id')
-        .single();
+      const attendee = await registerAttendee({
+        name: name.trim(),
+        occupation: occupation.trim(),
+      });
 
-      if (insertError) {
-        throw insertError;
-      }
-
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(REGISTRATION_FLAG, 'true');
-         if (data?.id) {
-           window.localStorage.setItem(ATTENDEE_ID_KEY, data.id);
-         }
-      }
+      storeAttendeeInLocalStorage(attendee);
 
       navigate('/hub', { replace: true });
     } catch (submitError) {

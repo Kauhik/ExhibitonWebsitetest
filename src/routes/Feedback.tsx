@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
-import { supabase } from '@/lib/supabaseClient';
+import { getStoredAttendeeId } from '@/api/attendeeApis';
+import {
+  submitFeedback,
+  type FeedbackRating,
+} from '@/api/feedbackApis';
 
-const ATTENDEE_ID_KEY = 'attendee_id';
-
-const MAX_RATING = 5;
+const MAX_RATING: FeedbackRating = 5;
 
 const Feedback = () => {
   const navigate = useNavigate();
-  const [rating, setRating] = useState<number | null>(null);
+  const [rating, setRating] = useState<FeedbackRating | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
@@ -25,7 +27,7 @@ const Feedback = () => {
       return;
     }
 
-    const attendeeId = window.localStorage.getItem(ATTENDEE_ID_KEY);
+    const attendeeId = getStoredAttendeeId();
 
     if (!attendeeId) {
       setError(
@@ -38,15 +40,7 @@ const Feedback = () => {
     setError(null);
 
     try {
-      const { error: insertError } = await supabase.from('feedback').insert({
-        attendee_id: attendeeId,
-        rating,
-      });
-
-      if (insertError) {
-        throw insertError;
-      }
-
+      await submitFeedback({ attendeeId, rating });
       setSubmitted(true);
     } catch (submitError) {
       console.error(submitError);
@@ -74,12 +68,13 @@ const Feedback = () => {
           <div className="flex items-center justify-center gap-2">
             {Array.from({ length: MAX_RATING }, (_, index) => {
               const value = index + 1;
-              const isActive = rating != null && value <= rating;
+              const valueAsRating = value as FeedbackRating;
+              const isActive = rating != null && valueAsRating <= rating;
               return (
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setRating(value)}
+                  onClick={() => setRating(valueAsRating)}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-xl text-yellow-400 shadow-sm transition-transform active:scale-95 focus-visible-ring"
                   aria-label={`Rate ${value} out of ${MAX_RATING}`}
                 >
@@ -130,4 +125,3 @@ const Feedback = () => {
 };
 
 export default Feedback;
-
