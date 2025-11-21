@@ -59,13 +59,20 @@ const QrScannerPage = () => {
               if (!detectedCodes.length) {
                 return;
               }
-              const [first] = detectedCodes;
-              if (!first?.rawValue) {
+              // Only react to specific QR values and keep scanning continuously.
+              const validValues = new Set(['QR1', 'QR2', 'QR3', 'QR4']);
+              const match = detectedCodes.find((code) => {
+                const value = code.rawValue?.trim().toUpperCase();
+                return value != null && validValues.has(value);
+              });
+
+              if (!match?.rawValue) {
                 return;
               }
+
               setError(null);
               setHasScannedOnce(true);
-              setLastResult(first.rawValue);
+              setLastResult(match.rawValue.trim());
             }}
             onError={(scanError: unknown) => {
               // Normal "no QR found" errors can be noisy; only surface permission/device issues.
