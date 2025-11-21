@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
 import { useShows } from '@/hooks/useShows';
+import { QR_SCANNER_ROUTE } from '@/api/qrApis';
 
 const REGISTRATION_FLAG = 'attendee_registered';
 
@@ -43,7 +44,7 @@ const Hub = () => {
       <div className="mt-4 flex justify-center">
         <button
           type="button"
-          onClick={() => navigate('/scan')}
+          onClick={() => navigate(QR_SCANNER_ROUTE)}
           className="inline-flex h-11 items-center justify-center rounded-full bg-slate-900 px-6 text-sm font-semibold text-white shadow-lg transition-transform active:scale-95 focus-visible-ring"
         >
           Scan QR code

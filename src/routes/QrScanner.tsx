@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import type { IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import BrandHeader from '@/components/BrandHeader';
+import { matchKnownQrCode } from '@/api/qrApis';
 
 const isLikelyUrl = (value: string) => {
   try {
@@ -59,12 +60,10 @@ const QrScannerPage = () => {
               if (!detectedCodes.length) {
                 return;
               }
-              // Only react to specific QR values and keep scanning continuously.
-              const validValues = new Set(['QR1', 'QR2', 'QR3', 'QR4']);
-              const match = detectedCodes.find((code) => {
-                const value = code.rawValue?.trim().toUpperCase();
-                return value != null && validValues.has(value);
-              });
+              // Only react to specific exhibition QR codes and keep scanning continuously.
+              const match = detectedCodes.find(
+                (code) => matchKnownQrCode(code.rawValue) !== null,
+              );
 
               if (!match?.rawValue) {
                 return;
