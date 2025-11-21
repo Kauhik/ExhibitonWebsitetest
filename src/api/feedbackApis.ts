@@ -16,22 +16,26 @@ import { supabase } from '@/lib/supabaseClient';
 export type FeedbackRating = 1 | 2 | 3 | 4 | 5;
 
 /**
- * Payload required to record a single feedback entry.
- */
-export type FeedbackSubmitInput = {
-  attendeeId: string;
-  rating: FeedbackRating;
-};
-
-/**
  * Minimal representation of a feedback record. This is
  * mostly useful for admin tooling or future visualisations.
  */
 export type FeedbackRecord = {
   id: string;
-  attendee_id: string;
+  attendee_id: string | null;
   rating: FeedbackRating;
   created_at: string;
+};
+
+/**
+ * Payload required to record a single feedback entry.
+ *
+ * `attendeeId` is optional so that feedback can be stored
+ * anonymously when the exhibition runs without a check-in
+ * step on the entrance screen.
+ */
+export type FeedbackSubmitInput = {
+  attendeeId?: string | null;
+  rating: FeedbackRating;
 };
 
 /**
@@ -46,7 +50,7 @@ export const submitFeedback = async (
   const { data, error } = await supabase
     .from('feedback')
     .insert({
-      attendee_id: input.attendeeId,
+      attendee_id: input.attendeeId ?? null,
       rating: input.rating,
     })
     .select('id, attendee_id, rating, created_at')
@@ -58,4 +62,3 @@ export const submitFeedback = async (
 
   return data as FeedbackRecord;
 };
-

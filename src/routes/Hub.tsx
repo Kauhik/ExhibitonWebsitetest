@@ -1,34 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
 import PuzzleBackdrop from '@/components/PuzzleBackdrop';
 import { useShows } from '@/hooks/useShows';
 import { QR_SCANNER_ROUTE } from '@/api/qrApis';
-import { hasRegisteredAttendee } from '@/api/attendeeApis';
 
 const Hub = () => {
   const navigate = useNavigate();
   const { shows, isLoading, error, reload } = useShows();
-  const [isAllowed, setIsAllowed] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const hasRegistered = hasRegisteredAttendee();
-
-    if (!hasRegistered) {
-      navigate('/', { replace: true });
-      return;
-    }
-
-    setIsAllowed(true);
-  }, [navigate]);
-
-  if (!isAllowed) {
-    return null;
-  }
 
   return (
     <div className="relative min-h-screen bg-white px-6 pb-24 pt-14 text-slate-900">

@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BrandHeader from '@/components/BrandHeader';
-import { getStoredAttendeeId } from '@/api/attendeeApis';
-import {
-  submitFeedback,
-  type FeedbackRating,
-} from '@/api/feedbackApis';
+import { submitFeedback, type FeedbackRating } from '@/api/feedbackApis';
 
 const MAX_RATING: FeedbackRating = 5;
 
@@ -22,25 +18,11 @@ const Feedback = () => {
       return;
     }
 
-    if (typeof window === 'undefined') {
-      setError('Feedback can only be submitted from a browser.');
-      return;
-    }
-
-    const attendeeId = getStoredAttendeeId();
-
-    if (!attendeeId) {
-      setError(
-        'We could not find your registration details. Please return to the entrance screen, enter your name, and try again.',
-      );
-      return;
-    }
-
     setIsSubmitting(true);
     setError(null);
 
     try {
-      await submitFeedback({ attendeeId, rating });
+      await submitFeedback({ rating });
       setSubmitted(true);
     } catch (submitError) {
       console.error(submitError);
