@@ -21,28 +21,21 @@ export type FeedbackRating = 1 | 2 | 3 | 4 | 5;
  */
 export type FeedbackRecord = {
   id: string;
-  attendee_id: string | null;
   rating: FeedbackRating;
   created_at: string;
 };
 
 /**
- * Payload required to record a single feedback entry.
- *
- * `attendeeId` is optional so that feedback can be stored
- * anonymously when the exhibition runs without a check-in
- * step on the entrance screen.
+ * Payload required to record a single feedback entry. Since
+ * the exhibition flow is anonymous, we only capture a rating.
  */
 export type FeedbackSubmitInput = {
-  attendeeId?: string | null;
   rating: FeedbackRating;
 };
 
 /**
- * Persists an overall event rating for a given attendee.
- *
- * The caller is responsible for ensuring that the attendee
- * id refers to a valid row in `public.attendees`.
+ * Persists an overall event rating. Feedback is stored
+ * anonymously and not linked to an attendee record.
  */
 export const submitFeedback = async (
   input: FeedbackSubmitInput,
@@ -50,10 +43,9 @@ export const submitFeedback = async (
   const { data, error } = await supabase
     .from('feedback')
     .insert({
-      attendee_id: input.attendeeId ?? null,
       rating: input.rating,
     })
-    .select('id, attendee_id, rating, created_at')
+    .select('id, rating, created_at')
     .single();
 
   if (error || !data) {
