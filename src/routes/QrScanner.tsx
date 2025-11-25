@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import type { IDetectedBarcode } from '@yudiel/react-qr-scanner';
 import BrandHeader from '@/components/BrandHeader';
-import { matchKnownQrCode } from '@/api/qrApis';
+import { buildQrScanResponse, matchKnownQrCode } from '@/api/qrApis';
 
 const isLikelyUrl = (value: string) => {
   try {
@@ -61,17 +61,31 @@ const QrScannerPage = () => {
                 return;
               }
               // Only react to specific exhibition QR codes and keep scanning continuously.
-              const match = detectedCodes.find(
-                (code) => matchKnownQrCode(code.rawValue) !== null,
-              );
+              let matchedCode: string | null = null;
+              const match = detectedCodes.find((code) => {
+                const id = matchKnownQrCode(code.rawValue);
+                if (id) {
+                  matchedCode = id;
+                  return true;
+                }
+                return false;
+              });
 
-              if (!match?.rawValue) {
+              if (!match || !matchedCode) {
                 return;
               }
 
+              const response = buildQrScanResponse(matchedCode);
+
+              // Temporary logging to help debug QR scan responses.
+              // This can be used by developers to verify that each
+              // code returns the expected "API-style" payload.
+              // eslint-disable-next-line no-console
+              console.log('QR scan response', response);
+
               setError(null);
               setHasScannedOnce(true);
-              setLastResult(match.rawValue.trim());
+              setLastResult(response.message);
             }}
             onError={(scanError: unknown) => {
               // Normal "no QR found" errors can be noisy; only surface permission/device issues.

@@ -55,3 +55,35 @@ export const matchKnownQrCode = (raw: string | null | undefined): QrCodeId | nul
   return KNOWN_QR_CODE_IDS.find((id) => id === normalised) ?? null;
 };
 
+/**
+ * Shape of the "API response" we return on the client
+ * when a recognised QR code is scanned. This does not
+ * perform a network call – it is a local, predictable
+ * response object that a future UI or backend could
+ * mirror as a real HTTP 200 JSON payload.
+ */
+export type QrScanResponse = {
+  status: 200;
+  code: QrCodeId;
+  message: string;
+};
+
+const QR_SCAN_MESSAGES: Record<QrCodeId, string> = {
+  QR1: 'QR1 scanned successfully – piece 1 unlocked.',
+  QR2: 'QR2 scanned successfully – piece 2 unlocked.',
+  QR3: 'QR3 scanned successfully – piece 3 unlocked.',
+  QR4: 'QR4 scanned successfully – piece 4 unlocked.',
+};
+
+/**
+ * Builds the canonical success response for a given
+ * QR code id. Treat this as the contract a backend
+ * API would also return with HTTP 200 if we later
+ * decide to persist scans server-side.
+ */
+export const buildQrScanResponse = (code: QrCodeId): QrScanResponse => ({
+  status: 200,
+  code,
+  message: QR_SCAN_MESSAGES[code],
+});
+
